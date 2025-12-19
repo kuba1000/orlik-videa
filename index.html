@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orlík – Videa & PNG Obrázky</title>
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body {background:#f8f9fa;font-family:Segoe UI,sans-serif;padding:20px;}
+    .title {background:#0077cc;color:white;padding:16px 40px;border-radius:50px;font-size:1.9rem;font-weight:bold;text-align:center;margin:20px auto;display:table;box-shadow:0 6px 15px rgba(0,119,204,0.3);}
+    .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;max-width:1300px;margin:0 auto;}
+    .item {background:white;border-radius:18px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.1);transition:transform .3s;}
+    .item:hover {transform:translateY(-5px);}
+    video, img {width:100%;height:auto;display:block;background:#eee;}
+    video {height:200px;object-fit:cover;}
+    .caption {padding:12px;text-align:center;font-weight:bold;color:#0077cc;font-size:1.1rem;}
+    .qr {text-align:center;margin:40px 0;}
+    .qr img {width:180px;height:180px;border-radius:15px;box-shadow:0 6px 15px rgba(0,119,204,0.3);}
+    .update {text-align:center;color:#666;font-size:0.9rem;margin-top:15px;}
+    @media (max-width:600px) {.title{font-size:1.5rem;}.grid{gap:15px;}video{height:160px;}}
+  </style>
+</head>
+<body>
+  <h1 class="title">Orlík – Videa & PNG Obrázky</h1>
+  <div class="grid">
+
+    <div class="item">
+      <video controls><source src="video1.webm" type="video/webm">Nepodporováno</video>
+      <div class="caption">Video – Video 1</div>
+    </div>
+
+    <div class="item">
+      <video controls><source src="video2.webm" type="video/webm">Nepodporováno</video>
+      <div class="caption">Video – Video 2</div>
+    </div>
+
+    <div class="item">
+      <img src="obrazek1.png" alt="obrazek1">
+      <div class="caption">Obrázek – Obrázek 1</div>
+    </div>
+
+    <div class="item">
+      <img src="obrazek2.png" alt="obrazek2">
+      <div class="caption">Obrázek – Obrázek 2</div>
+    </div>
+
+  </div>
+
+  <div class="qr">
+    <p><strong>QR kód – jen pro tuto stránku:</strong></p>
+    <img src="qr_videa.png" alt="QR kód">
+  </div>
+  <div class="update">Aktualizováno: 2025-12-19 07:44</div>
+</body>
+</html>
