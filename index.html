@@ -3,35 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orlík – Videa & Fotky</title>
+  <title>Orlík – 3D Modely, Videa & Fotky</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    * {margin:0;padding:0;box-sizing:border-box;}
-    html, body {height:100%;}
-    body {background:#f8f9fa;font-family:Segoe UI,sans-serif;display:flex;flex-direction:column;}
-    .container {display:flex;flex:1;max-width:1400px;margin:20px auto;width:100%;gap:20px;height:calc(100vh - 40px);}
-    .sidebar {width:250px;background:#0077cc;border-radius:20px;padding:30px 20px;box-shadow:0 8px 20px rgba(0,119,204,0.3);display:flex;flex-direction:column;}
-    .sidebar h2 {color:white;text-align:center;margin-bottom:40px;font-size:1.8rem;}
-    .nav-pills {display:flex;flex-direction:column;gap:15px;}
-    .nav-pills a {padding:16px 20px;border-radius:50px;text-align:center;font-weight:bold;font-size:1.2rem;transition:all .3s;}
-    .nav-pills a.fotky {background:white;color:#0077cc;}
-    .nav-pills a.videa {background:transparent;color:white;border:2px solid white;}
-    .nav-pills a:hover {transform:scale(1.05);box-shadow:0 6px 15px rgba(0,0,0,0.2);}
-    .nav-pills a.active {background:white !important;color:#0077cc !important;}
-    .main-content {flex:1;background:white;border-radius:20px;padding:30px;box-shadow:0 8px 20px rgba(0,0,0,0.1);overflow-y:auto;}
-    .title {font-size:2rem;color:#0077cc;text-align:center;margin-bottom:30px;font-weight:bold;}
-    .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:25px;}
-    .item {background:white;border-radius:18px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.1);transition:transform .3s;}
-    .item:hover {transform:translateY(-5px);}
-    video, img {width:100%;height:auto;display:block;background:#eee;}
-    video {height:200px;object-fit:cover;}
-    .caption {padding:12px;text-align:center;font-weight:bold;color:#0077cc;font-size:1.1rem;}
-    .tab-content > div {display:none;}
-    .tab-content > .active {display:block;}
-    .qr {text-align:center;margin:50px 0 30px;}
-    .qr img {width:180px;height:180px;border-radius:15px;box-shadow:0 6px 15px rgba(0,119,204,0.3);}
-    .update {text-align:center;color:#666;font-size:0.9rem;}
-    @media (max-width:900px) {.container {flex-direction:column;height:auto;}.sidebar {width:100%;border-radius:15px;}.nav-pills {flex-direction:row;justify-content:center;}}
-    @media (max-width:600px) {.grid {gap:15px;} video {height:160px;} .title {font-size:1.6rem;}}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { background: #f8f9fa; font-family: "Segoe UI", sans-serif; display: flex; flex-direction: column; }
+    .container { display: flex; flex: 1; max-width: 1400px; margin: 20px auto; width: 100%; gap: 20px; height: calc(100vh - 40px); }
+
+    /* Boční panel */
+    .sidebar { width: 250px; background: #0077cc; border-radius: 20px; padding: 30px 20px; box-shadow: 0 8px 20px rgba(0,119,204,0.3); display: flex; flex-direction: column; }
+    .sidebar h2 { color: white; text-align: center; margin-bottom: 40px; font-size: 1.8rem; }
+    .nav-pills { display: flex; flex-direction: column; gap: 15px; }
+    .nav-pills a { padding: 16px 20px; border-radius: 50px; text-align: center; font-weight: bold; font-size: 1.2rem; transition: all .3s; background: white; color: #0077cc; text-decoration: none; }
+    .nav-pills a:hover { transform: scale(1.05); }
+    .nav-pills a.active { background: #0077cc !important; color: white !important; }
+
+    /* Hlavní obsah */
+    .main { flex: 1; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); overflow-y: auto; position: relative; }
+    .title { font-size: 2rem; color: #0077cc; text-align: center; margin-bottom: 30px; }
+
+    .section { display: none; position: relative; }
+    .section.active { display: block; }
+
+    /* Grid pro modely, videa a fotky */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+    .item { background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: transform .3s; position: relative; }
+    .item:hover { transform: translateY(-5px); }
+    video, img { width: 100%; height: auto; display: block; background: #eee; }
+    video { height: 200px; object-fit: cover; }
+    .caption { padding: 12px; text-align: center; font-weight: bold; color: #0077cc; font-size: 1.1rem; }
+
+    /* 3D Model */
+    .model-container { position: relative; width: 100%; height: 400px; background: #0077cc; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+    model-viewer { width: 100%; height: 100%; }
+    .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 1.6rem; z-index: 1; }
+
+    .qr { text-align: center; margin: 50px 0; }
+    .qr img { width: 180px; height: 180px; border-radius: 15px; box-shadow: 0 6px 15px rgba(0,119,204,0.3); }
+    .update { text-align: center; color: #666; font-size: 0.9rem; }
+
+    /* Responsivita */
+    @media (max-width: 900px) {
+      .container { flex-direction: column; height: auto; }
+      .sidebar { width: 100%; border-radius: 15px; padding: 20px; }
+      .nav-pills { flex-direction: row; justify-content: center; }
+      .nav-pills a { font-size: 1.1rem; padding: 12px 20px; }
+    }
+    @media (max-width: 600px) {
+      .grid { gap: 15px; }
+      video { height: 200px; }
+      .model-container { height: 350px; }
+      .title { font-size: 1.6rem; }
+    }
   </style>
 </head>
 <body>
@@ -39,64 +63,135 @@
     <div class="sidebar">
       <h2>Orlík</h2>
       <div class="nav-pills">
-        <a href="#" class="fotky active" onclick="showTab('fotky')">Fotky</a>
-        <a href="#" class="videa" onclick="showTab('videa')">Videa</a>
+        <a href="#" class="active" onclick="show('modely')">3D Modely</a>
+        <a href="#" onclick="show('videa')">Videa</a>
+        <a href="#" onclick="show('fotky')">Fotky</a>
       </div>
     </div>
 
-    <div class="main-content">
-      <h1 class="title">Orlík – Videa & Fotky</h1>
+    <div class="main">
+      <h1 class="title"></h1>
 
-      <div class="tab-content">
-        <div id="fotky" class="active">
-          <div class="grid">
-            <div class="item">
-              <img src="obrazek1.png" alt="Obrázek 1 – Orlík" loading="lazy">
-              <div class="caption">Obrázek 1</div>
-            </div>
-            <div class="item">
-              <img src="obrazek2.png" alt="Obrázek 2 – Orlík" loading="lazy">
-              <div class="caption">Obrázek 2</div>
-            </div>
-          </div>
-        </div>
+      <!-- 3D Modely -->
+      <div id="modely" class="section active">
+        <div class="grid" id="models-grid"></div>
+      </div>
 
-        <div id="videa">
-          <div class="grid">
-            <div class="item">
-              <video controls preload="metadata">
-                <source src="video1.mp4" type="video/mp4">
-                Váš prohlížeč nepodporuje video.
-              </video>
-              <div class="caption">Video 1</div>
-            </div>
-            <div class="item">
-              <video controls preload="metadata">
-                <source src="video2.mp4" type="video/mp4">
-                Váš prohlížeč nepodporuje video.
-              </video>
-              <div class="caption">Video 2</div>
-            </div>
-          </div>
-        </div>
+      <!-- Videa -->
+      <div id="videa" class="section">
+        <div class="grid" id="videos-grid"></div>
+      </div>
+
+      <!-- Fotky -->
+      <div id="fotky" class="section">
+        <div class="grid" id="photos-grid"></div>
       </div>
 
       <div class="qr">
-        <p><strong>Naskenuj QR kód a otevři stránku na mobilu:</strong></p>
-        <img src="qr_videa.png" alt="QR kód">
+        <p><strong>Naskenuj QR kód a otevři na mobilu:</strong></p>
+        <img src="qr.png" alt="QR kód"> <!-- Nahraď cestou k tvému QR obrázku na GitHubu -->
       </div>
-      <div class="update">Aktualizováno: 2025-12-19 08:24</div>
+      <div class="update">Aktualizováno: 2025-12-31</div> <!-- Nastav ručně -->
     </div>
   </div>
 
   <script>
-    function showTab(tab) {
-      document.querySelectorAll('.tab-content > div').forEach(d => d.classList.remove('active'));
+    // Nahraď 'tvůj-repo' a 'tvůj-účet' svými údaji
+    const githubBase = 'https://raw.githubusercontent.com/tvůj-účet/tvůj-repo/main/';
+
+    // Konfigurace pro sekce (přidej kolik chceš)
+    const models = [
+      { src: 'modely/model1.glb', caption: 'Model Orlíku 1' },
+      { src: 'modely/model2.glb', caption: 'Model Orlíku 2' },
+      // Přidej další: { src: 'modely/nový.glb', caption: 'Popisek' },
+    ];
+
+    const videos = [
+      { src: 'videa/video1.mp4', caption: 'Simulace1_povodňového-stavu' },
+      { src: 'videa/video2.mp4', caption: 'Simulace2_povodňového-stavu' },
+      // Přidej další: { src: 'videa/nové.mp4', caption: 'Popisek' },
+    ];
+
+    const photos = [
+      { src: 'fotky/obrazek1.png', caption: 'půdorys' },
+      { src: 'fotky/obrazek2.png', caption: 'řez' },
+      // Přidej další: { src: 'fotky/nový.png', caption: 'Popisek' },
+    ];
+
+    // Funkce pro zobrazení sekce
+    function show(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-pills a').forEach(a => a.classList.remove('active'));
-      document.getElementById(tab).classList.add('active');
-      document.querySelector(`.nav-pills a.${tab}`).classList.add('active');
-      event.preventDefault();
+      document.getElementById(id).classList.add('active');
+      document.querySelector(`.nav-pills a[onclick="show('${id}')"]`).classList.add('active');
     }
+
+    // Dynamické generování obsahu
+    function generateGrid(containerId, items, type) {
+      const grid = document.getElementById(containerId);
+      grid.innerHTML = ''; // Vyčistit
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+
+        if (type === 'model') {
+          const modelContainer = document.createElement('div');
+          modelContainer.className = 'model-container';
+          const viewer = document.createElement('model-viewer');
+          viewer.src = githubBase + item.src;
+          viewer.setAttribute('alt', item.caption);
+          viewer.setAttribute('auto-rotate', '');
+          viewer.setAttribute('camera-controls', '');
+          viewer.setAttribute('ar', '');
+          viewer.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
+          viewer.setAttribute('shadow-intensity', '1.5');
+          viewer.setAttribute('exposure', '1');
+          viewer.setAttribute('environment-image', 'neutral');
+
+          const placeholder = document.createElement('div');
+          placeholder.className = 'placeholder';
+          placeholder.textContent = 'Načítám 3D model...';
+
+          viewer.addEventListener('load', () => placeholder.style.display = 'none');
+          viewer.addEventListener('error', () => {
+            placeholder.textContent = 'Chyba načítání modelu';
+            placeholder.style.color = '#ff6666';
+          });
+
+          modelContainer.appendChild(viewer);
+          modelContainer.appendChild(placeholder);
+          div.appendChild(modelContainer);
+        } else if (type === 'video') {
+          const video = document.createElement('video');
+          video.controls = true;
+          video.preload = 'metadata';
+          const source = document.createElement('source');
+          source.src = githubBase + item.src;
+          source.type = 'video/mp4';
+          video.appendChild(source);
+          video.innerHTML += 'Váš prohlížeč nepodporuje video.';
+          div.appendChild(video);
+        } else if (type === 'photo') {
+          const img = document.createElement('img');
+          img.src = githubBase + item.src;
+          img.alt = item.caption;
+          img.loading = 'lazy';
+          div.appendChild(img);
+        }
+
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = item.caption;
+        div.appendChild(caption);
+
+        grid.appendChild(div);
+      });
+    }
+
+    // Generovat při načtení
+    generateGrid('models-grid', models, 'model');
+    generateGrid('videos-grid', videos, 'video');
+    generateGrid('photos-grid', photos, 'photo');
   </script>
 </body>
 </html>
